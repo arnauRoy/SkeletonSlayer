@@ -36,9 +36,6 @@ public class Hud : MonoBehaviour
         if(waveSpawner==null)return;
         waveSpawner.EnemiesAliveChanged+=UpdateEnemiesWave;
         waveSpawner.WaveStarted+=UpdateWaves;
-
-
-
     }
 
     private void OnDisable()
