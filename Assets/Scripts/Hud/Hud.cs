@@ -23,6 +23,10 @@ public class Hud : MonoBehaviour
     [SerializeField] private TMP_Text actualWaveText;
 
     [SerializeField] private TMP_Text totalWavesText;
+    
+   //----------------Money----------------
+    [SerializeField] private MoneyHud moneyHud;
+    private Wallet wallet; 
 
     private void OnEnable()
     {   
@@ -33,9 +37,16 @@ public class Hud : MonoBehaviour
         player.HealthUpdated+=UpdateHealth;
         player.ShieldUpdated+=UpdateShield;
 
+        wallet = GameSession.Instance.Wallet;
+        wallet.MoneyChanged += OnMoneyChanged;
+        OnMoneyChanged(wallet.CurrentMoney); 
+
+
         if(waveSpawner==null)return;
         waveSpawner.EnemiesAliveChanged+=UpdateEnemiesWave;
         waveSpawner.WaveStarted+=UpdateWaves;
+
+        moneyHud=GetComponent<MoneyHud>();
     }
 
     private void OnDisable()
@@ -44,6 +55,10 @@ public class Hud : MonoBehaviour
         weapon.AmmoUpdate-=UpdateAmmo;
         player.HealthUpdated-=UpdateHealth;
         player.ShieldUpdated-=UpdateShield;
+
+        
+        
+        if (wallet != null) wallet.MoneyChanged -= OnMoneyChanged;     // valor inicial
 
         if(waveSpawner==null)return;
 
@@ -80,5 +95,11 @@ public class Hud : MonoBehaviour
         actualWaveText.text=actualWave.ToString();
         totalWavesText.text=MaxWave.ToString();
     }
+
+    private void OnMoneyChanged(int money)
+    {
+        moneyHud.SetMoney(money);
+    }
+
 
 }

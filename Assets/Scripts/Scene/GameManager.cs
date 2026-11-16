@@ -55,5 +55,11 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void StartNewGame()
+    {
+        GameSession.Instance.Wallet.Reset();
+        SceneManager.LoadScene("Level01");   // el nombre de tu escena de juego
+    }
     
 }

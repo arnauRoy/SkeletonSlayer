@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference sprintAction;
+
+    [SerializeField] private InputActionReference jumpAction;
+
     [SerializeField] private InputActionReference shootAction;
     [SerializeField] private InputActionReference rechargeAction;
 
@@ -20,6 +23,9 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private bool isSprinting;
+
+    private bool requestJump;
+
 
     [Header("Weapon")] 
     private Weapon weapon;
@@ -43,6 +49,9 @@ public class PlayerController : MonoBehaviour
         moveAction.action.Enable();
         lookAction.action.Enable();
         sprintAction.action.Enable();
+        jumpAction.action.Enable();
+        shootAction.action.Enable();
+        rechargeAction.action.Enable();
 
     }
 
@@ -51,6 +60,9 @@ public class PlayerController : MonoBehaviour
         moveAction.action.Disable();
         lookAction.action.Disable();
         sprintAction.action.Disable();
+        jumpAction.action.Disable();
+        shootAction.action.Disable();
+        rechargeAction.action.Disable();
 
         Cursor.lockState=CursorLockMode.None;//Al acabar resetejem tot
         Cursor.visible=true;
@@ -65,6 +77,7 @@ public class PlayerController : MonoBehaviour
         vertical = move.y;
 
         isSprinting = sprintAction.action.IsPressed();
+        requestJump = jumpAction.action.WasPressedThisFrame();
         look.Rotate(lookAction.action.ReadValue<Vector2>());
 
         if(rechargeAction.action.WasPressedThisFrame())weapon.Recharge();
@@ -77,6 +90,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //Pasem tota la informació dels inputs a la clase encarregada de gestionar el moviment
-        movement.MoveEntity(horizontal, vertical,isSprinting);
+        movement.MoveEntity(horizontal, vertical,isSprinting,requestJump);
     }
 }

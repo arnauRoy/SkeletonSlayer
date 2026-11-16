@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyDistance : Enemy
@@ -12,8 +13,10 @@ public class EnemyDistance : Enemy
     private float aimAtTargetRate = 1.5f;
     private float aimAtTargetUpdate=0;
 
-    private void Awake()
-    {
+    protected override void Awake()
+    {   
+
+        base.Awake(); //Llamamos al metodo de la clase padre primero
         // Instanciar el arma como hija del punto de sujeción
         GameObject weaponObject = Instantiate(
             weaponModel,

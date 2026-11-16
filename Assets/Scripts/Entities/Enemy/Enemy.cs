@@ -16,6 +16,15 @@ using UnityEngine.AI;
 
         [SerializeField] protected EnemyAnimator enemyAnimator; //Encargado de las animaciones
 
+        private int reward=10;
+        public int Reward => reward;
+
+        [SerializeField] private int rewardMin=5;
+
+        [SerializeField] private int rewardMax=10;
+
+
+
 //------------------------------WayPoints--------------------------------
 
         [SerializeField] Transform[] wayPoints;
@@ -34,9 +43,15 @@ using UnityEngine.AI;
         private Player player;
         
         //Constructor
+
+        protected virtual void Awake()
+        {
+            reward = Random.Range(rewardMin, rewardMax + 1);
+        }
         public void Initialize(Transform[] wayPoints)
         {
             this.wayPoints=wayPoints;
+
         }
 
         void Start()
@@ -54,6 +69,7 @@ using UnityEngine.AI;
                 enabled = false;
             }
             navMeshAgent.speed=chasingSpeed;
+
         }
     /*___________________________________________________________________________________
     |                                                                                    |

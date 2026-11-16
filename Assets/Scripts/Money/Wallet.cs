@@ -4,16 +4,16 @@ using System;
 public class Wallet
 {
     
-    public int currentMoney {get; private set;}=0;
-
+    private int currentMoney;
+    public int CurrentMoney => currentMoney;
     private int MaxMoney=9999;
 
-    public event Action<int> MoneyChange;
+    public event Action<int> MoneyChanged;
 
 
     private void NotifyChange()
     {
-        MoneyChange?.Invoke(currentMoney);
+        MoneyChanged?.Invoke(currentMoney);
         
     }
     public bool SpendMoney(int money)
@@ -39,6 +39,12 @@ public class Wallet
         return true; 
 
         
+    }
+
+    public void Reset()
+    {
+        currentMoney = 0;
+        NotifyChange();
     }
 
 }

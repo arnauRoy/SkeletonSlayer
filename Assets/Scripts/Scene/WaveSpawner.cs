@@ -121,9 +121,11 @@ public class WaveSpawner : MonoBehaviour
     private void HandleEnemyDead(Entity e)
     {   
         e.Died-=HandleEnemyDead;
-         if (e is Enemy enemy)
+
+        if (e is Enemy enemy)
         {
             enemies.Remove(enemy);
+            GameSession.Instance.Wallet.GainMoney(enemy.Reward);//Cada vex que matamos a uno cogemos su recompensa
         }
         EnemiesAliveChanged?.Invoke(enemies.Count);
     }

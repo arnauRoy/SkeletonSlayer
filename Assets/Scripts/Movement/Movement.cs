@@ -6,35 +6,45 @@ public class Movement : MonoBehaviour
 
     [SerializeField]private Rigidbody rb;
 
+    [SerializeField] private Transform groundCheck;
+
+    [SerializeField] private float groundRadius=0.25f;
+
+    [SerializeField] private LayerMask groundMask;
+
     [Header("Movement")]
     [SerializeField] private float movementSpeed=5f;
     [SerializeField] private float sprintSpeed=7f;
+    [SerializeField] private float jumpSpeed=5f;
+
+    private bool onGround;
 
     
     
     //Funcion que genera todo el movimiento
-    public void MoveEntity(float horizontal, float vertical, bool isSprinting)
+    public void MoveEntity(float horizontal, float vertical, bool isSprinting, bool jumpRequested)
     {
-        Vector3 direction = (transform.right*horizontal+transform.forward*vertical).normalized;//Creem el vector amb les dades registrades de les accions
+        // ¿hay suelo bajo los pies?
+        onGround = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
 
-        //Afegim la velocitat de moviment
-        float yDirection=rb.linearVelocity.y; 
-        float Xdirection=direction.x*movementSpeed;
-        float Zdirection=direction.z*movementSpeed;
-        
-        if(isSprinting)//Si estroba corrent es multiplica per una altre velocitat
+        // dirección horizontal, relativa a hacia dónde mira el jugador
+        Vector3 direction = (transform.right * horizontal + transform.forward * vertical).normalized;
+
+        float speed = isSprinting ? sprintSpeed : movementSpeed;
+
+        // se conserva la velocidad vertical que ya tiene el Rigidbody (gravedad)
+        float yVelocity = rb.linearVelocity.y;
+
+        if (jumpRequested && onGround && yVelocity <= 0.1f)
         {
-            Xdirection=direction.x*sprintSpeed;
-            Zdirection=direction.z*sprintSpeed;
-        
+            yVelocity = jumpSpeed;
         }
-        
-        rb.linearVelocity= new Vector3(
-        Xdirection,
-        yDirection,
-        Zdirection
-        );
 
+        rb.linearVelocity = new Vector3(
+            direction.x * speed,
+            yVelocity,
+            direction.z * speed
+        );
     }
     
 }
