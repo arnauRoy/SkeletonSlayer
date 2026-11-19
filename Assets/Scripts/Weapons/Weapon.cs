@@ -5,12 +5,8 @@ using System;
 public class Weapon : MonoBehaviour
 { 
 
-    //---------------Mascaras de entidades---------------
-    [SerializeField] private LayerMask entityMask;
-    [SerializeField] private LayerMask obstacleMask;
-
+    [SerializeField] private Collider ownerCollider;
     //---------------Posiciones---------------
-
     [SerializeField] private Transform origin;
     [SerializeField] private Transform spawnPoint;
     
@@ -33,8 +29,8 @@ public class Weapon : MonoBehaviour
 
     //---------------[Stats del disparo]---------------
 
-    private float shotForce=300;
-    private float shotRate=0.5f;
+    [SerializeField]private float bulletSpeed=60f;
+    private float shootRate=0.5f;
     private float shotRateTime=0;
 
     //Avisa sobre la accion los subscriptores pueden hacer cosas en funcion de eso
@@ -42,7 +38,10 @@ public class Weapon : MonoBehaviour
 
     private bool infiniteAmmo=false;
 
-
+    void Awake()
+    {
+        ownerCollider=GetComponentInParent<Collider>();
+    }
     private void ShowAmmoEvent(int ammo, int ammoInMagazine)
     {
         AmmoUpdate?.Invoke(ammo,ammoInMagazine);
@@ -72,54 +71,38 @@ public class Weapon : MonoBehaviour
     }
     public void Shoot()
     {   
-        Vector3 rayOrigin = origin.position;
-        Vector3 originBullet=spawnPoint.position;
         Vector3 direction = origin.transform.forward;
 
-        bool isAnEntity=Time.time>shotRateTime&&infiniteAmmo;//Comprueba si ha pasada el tiempo y si es una entidad no tiene limite de balas
+        bool hasInfiniteAmmo=Time.time>shotRateTime&&infiniteAmmo;//Comprueba si ha pasada el tiempo y si es una entidad no tiene limite de balas
         bool hasBulletsAndTimePassed=Time.time>shotRateTime&&ammoInMagazine>0;//Comprueba si ha pasado el shotRate y tiene balas entonces en el cargador dispara la bala
 
-        if ( hasBulletsAndTimePassed|| isAnEntity) 
+        if ( hasBulletsAndTimePassed|| hasInfiniteAmmo) 
         {   
-            Debug.DrawRay(rayOrigin, direction * maxDistance, Color.green, 2f);
-            Vector3 realDirection=onHit(rayOrigin,direction);
+
             GameObject newBullet;
 
+            Vector3 aimPoint = origin.position + direction * maxDistance;
+
+            if (Physics.Raycast(origin.position, direction, out RaycastHit hit, maxDistance))
+            {
+                aimPoint=hit.point;
+            }
+
+            Vector3 bulletDirection = (aimPoint - spawnPoint.position).normalized;
             //instanciación de una bala
             //Recibe el objeto,el origen y la rotacion
-            newBullet=Instantiate(bullet,originBullet,Quaternion.LookRotation(realDirection)*bullet.transform.rotation);
+            newBullet=Instantiate(bullet,spawnPoint.position,Quaternion.LookRotation(bulletDirection)*bullet.transform.rotation);
             //Quaternion.LookRotation nos dala bala orientada a la dirección del disparo
-            newBullet.GetComponent<Rigidbody>().AddForce(realDirection*shotForce);
+            //newBullet.GetComponent<Rigidbody>().AddForce(bulletDirection*shotForce,ForceMode.Impulse);
+            Bullet bulletScript=newBullet.GetComponent<Bullet>();
+            bulletScript.Initialize(ownerCollider,damage);
+            Rigidbody rb = newBullet.GetComponent<Rigidbody>();
 
-
-            shotRateTime=Time.time+shotRate; //le suma el rate al tiempo actual limitando el disparo
-        
+            rb.linearVelocity=bulletDirection*bulletSpeed;
+            shotRateTime=Time.time+shootRate; //le suma el rate al tiempo actual limitando el disparo
             Destroy(newBullet,2);
-
             if(!infiniteAmmo) ShowAmmoEvent(ammo,--ammoInMagazine);
         }
-    }
-
-    //Devuelve un Vector3 con la direccion des de el origen(origin) hasta el punto de impacto
-    private Vector3 onHit(Vector3 origin, Vector3 direction)
-    {    
-        Vector3 aimPoint=origin+direction*maxDistance;//Posicion base del apuntado
-        //Primero comprobamos que no hemos colisionado con un obstaculo
-        if(!Physics.Raycast(origin,direction,maxDistance,obstacleMask)){
-        //Devuelve true si colisiona con un objeto con la mascara asignada
-            if (Physics.Raycast(origin, direction, out RaycastHit hit,maxDistance,entityMask))
-                {       
-                    aimPoint=hit.point; //donde a llegado el disparo
-                    if (hit.collider.TryGetComponent(out Entity entity))//con hit sabemos quien hemos dado y podemos llamar a metodos suyos
-                        {
-                            entity.TakeDamage(damage);     
-                                    
-                        }
-                }
-            }        
-        
-        return (aimPoint-spawnPoint.position).normalized;
-
     }
      
     //GETTERS
