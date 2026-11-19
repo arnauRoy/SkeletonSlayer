@@ -1059,7 +1059,7 @@ PrefabInstance:
       objectReference: {fileID: 600348858}
     - target: {fileID: 5461532147301773259, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_VersionIndex
-      value: 2408
+      value: 2411
       objectReference: {fileID: 0}
     - target: {fileID: 6624156629378501985, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_LocalScale.y
@@ -8975,7 +8975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hud
   healthBar: {fileID: 1202292000}
   shieldBar: {fileID: 464276364}
-  player: {fileID: 1947051675}
+  player: {fileID: 0}
   weapon: {fileID: 1812695557}
   totalAmmoText: {fileID: 529284117}
   ammoInMagazineText: {fileID: 1480022328}
@@ -19678,7 +19678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89a5f3b6e142acbe483be4edbe0be2c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player: {fileID: 1947051675}
+  player: {fileID: 0}
   spawner: {fileID: 376772784}
   endDelay: 1.5
 --- !u!1001 &957012478
@@ -22740,7 +22740,7 @@ PrefabInstance:
       objectReference: {fileID: 487475681}
     - target: {fileID: 5461532147301773259, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_VersionIndex
-      value: 2405
+      value: 2408
       objectReference: {fileID: 0}
     - target: {fileID: 6624156629378501985, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_LocalScale.y
@@ -25651,7 +25651,7 @@ PrefabInstance:
       objectReference: {fileID: 794068478}
     - target: {fileID: 5461532147301773259, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_VersionIndex
-      value: 2405
+      value: 2408
       objectReference: {fileID: 0}
     - target: {fileID: 6624156629378501985, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_LocalScale.y
@@ -27529,7 +27529,7 @@ PrefabInstance:
       objectReference: {fileID: 1769377462}
     - target: {fileID: 5461532147301773259, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_VersionIndex
-      value: 2405
+      value: 2408
       objectReference: {fileID: 0}
     - target: {fileID: 6624156629378501985, guid: d4ac75e80b2c5b4049e87bf2ad02d901, type: 3}
       propertyPath: m_LocalScale.y
@@ -36340,17 +36340,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 525821938651780117, guid: 07b176f19a7b45447893ce5ab468919f, type: 3}
   m_PrefabInstance: {fileID: 95414699}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1947051675 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -3826607297979794370, guid: 07b176f19a7b45447893ce5ab468919f, type: 3}
-  m_PrefabInstance: {fileID: 95414699}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff11103f083ef546e97f43a146c6bafa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player
 --- !u!1001 &1949657789
 PrefabInstance:
   m_ObjectHideFlags: 0
