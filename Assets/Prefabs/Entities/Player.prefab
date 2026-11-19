@@ -181,6 +181,10 @@ GameObject:
   - component: {fileID: 3090553421314384451}
   - component: {fileID: 5906132965273096984}
   - component: {fileID: 8920381186597824429}
+  - component: {fileID: 8512165006461629614}
+  - component: {fileID: 955341714870907105}
+  - component: {fileID: 2118058139676725025}
+  - component: {fileID: 7539232918066557097}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -312,3 +316,74 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &8512165006461629614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527308630238195877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce23d095b26e5f62b7c368fff984dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Movement
+  rb: {fileID: 8920381186597824429}
+  groundCheck: {fileID: 3425699992129843577}
+  groundRadius: 0.25
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 136
+  movementSpeed: 5
+  sprintSpeed: 7
+  jumpSpeed: 5
+--- !u!114 &955341714870907105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527308630238195877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba8252dcd850b5050a20ee708a3b2015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Look
+  cameraTransform: {fileID: 6773364278774678250}
+  sensitivity: 0.1
+  minPitch: -80
+  maxPitch: 80
+--- !u!114 &2118058139676725025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527308630238195877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d29e08f3f53b3fa89940ac7e4d4672e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  shootAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rechargeAction: {fileID: 8328029124469748825, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &7539232918066557097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2527308630238195877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff11103f083ef546e97f43a146c6bafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  health: 100
+  maxHealth: 100
+  maxShield: 100
+  shield: 100
