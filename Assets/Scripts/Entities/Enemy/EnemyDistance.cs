@@ -7,8 +7,8 @@ public class EnemyDistance : Enemy
 
     [SerializeField] private GameObject weaponModel;
     [SerializeField] private Transform weaponHolder;//Donde visualmente aparece el arma
-
     [SerializeField] private LayerMask obstacleMask;
+
 
     private float aimAtTargetRate = 1.5f;
     private float aimAtTargetUpdate=0;
@@ -42,41 +42,19 @@ public class EnemyDistance : Enemy
     }
 
     //Override a la clase padre para comprobar tambien si el enemigo ve al player
-    protected override void UpdateState()
-    {
-        if(StateEnemy==EnemyState.Dead) return;  
-
-            float DistanceFromPlayer=CalculateDistanceFromAPoint(PlayerTarget.transform);
-            if(Time.time>=NextPathUpdate){
-                if(DistanceFromPlayer<= AttackRange&&CanSeePlayer()){
-                    ChangeState(EnemyState.Attack);                              
-                }
-                else if (DistanceFromPlayer<=RangeDetection)
-                {
-                    ChangeState(EnemyState.Chasing);
-                }
-                else
-                {
-                    ChangeState(EnemyState.Patrol);                              
-
-                    
-                }
-                NextPathUpdate=Time.time+UpdatePathRate;
-            }   
-    }
-
    
-    private bool CanSeePlayer()//Comprueba con raycast si tiene vision del target
+   
+    
+    protected override bool CanSeePlayer()//Comprueba con raycast si tiene vision del target
     {   
         Vector3 origin=transform.position;
         Vector3 target=PlayerTarget.transform.position;
 
         Vector3 direction=target-origin;
 
-
-        if(Physics.Raycast(origin, direction, out RaycastHit hit,weapon.MaxDistance, obstacleMask)) return false;
-
-        return true; 
+        //direction.normalized (Solo la dirección)
+        //direction.magnitude (Solo la distancia)
+       return !Physics.Raycast(origin, direction.normalized, direction.magnitude, obstacleMask);
     }
 
     private void AimAtTarget()//Comprueba la direccion del player

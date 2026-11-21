@@ -5,7 +5,7 @@ using System;
 public class Weapon : MonoBehaviour
 { 
 
-    [SerializeField] private Collider ownerCollider;
+    [SerializeField] private Entity owner;
     //---------------Posiciones---------------
     [SerializeField] private Transform origin;
     [SerializeField] private Transform spawnPoint;
@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
 
     void Awake()
     {
-        ownerCollider=GetComponentInParent<Collider>();
+        owner=GetComponentInParent<Entity>();
         weaponAnimator=GetComponent<WeaponAnimator>();
     }
     private void ShowAmmoEvent(int ammo, int ammoInMagazine)
@@ -100,7 +100,7 @@ public class Weapon : MonoBehaviour
             //Quaternion.LookRotation nos dala bala orientada a la dirección del disparo
             //newBullet.GetComponent<Rigidbody>().AddForce(bulletDirection*shotForce,ForceMode.Impulse);
             Bullet bulletScript=newBullet.GetComponent<Bullet>();
-            bulletScript.Initialize(ownerCollider,damage);
+            bulletScript.Initialize(owner,damage);
             Rigidbody rb = newBullet.GetComponent<Rigidbody>();
 
             rb.linearVelocity=bulletDirection*bulletSpeed;

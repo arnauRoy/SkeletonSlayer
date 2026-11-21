@@ -12,14 +12,18 @@ public class Entity : MonoBehaviour
 
     public event Action<Entity> Died; //Avisa sobre la accion los subscriptores pueden hacer cosas en funcion de eso
     public event Action<int,int> HealthUpdated; //Avisa sobre la accion los subscriptores pueden hacer cosas en funcion de eso
+
+    public event Action<Entity,Vector3>Damaged;
     
     private bool isDead=false;
-    public virtual void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage, Vector3 source)
     {   
         if(isDead) return;
 
         health = Mathf.Clamp(health, 0, maxHealth);
         health-=damage;
+
+        Damaged?.Invoke(this,source); 
 
         HealthUpdated?.Invoke(health,maxHealth);
 
@@ -43,6 +47,7 @@ public class Entity : MonoBehaviour
         Debug.Log($"Destruido: {gameObject.name}");    
         Died?.Invoke(this);
     }
+
 
 /*___________________________________________________________________________________
 |                                                                                    |

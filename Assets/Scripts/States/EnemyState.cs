@@ -4,4 +4,5 @@ public enum EnemyState
     Chasing,    
     Attack,
     Dead,
+    Investigating,
 }

@@ -10,6 +10,9 @@ using UnityEngine.AI;
         [SerializeField] private float chasingSpeed = 5f;
         [SerializeField] private float patrolingSpeed = 3f;
 
+        [SerializeField] private float investigatingSpeed = 2f;
+
+
 
 //------------------------------Object Variables--------------------------------
         private Collider collider;
@@ -41,6 +44,10 @@ using UnityEngine.AI;
         [SerializeField] private float attackRange=2f;
         private float DistanceToChangeWayPoint=2f;
         private Player player;
+
+        private Vector3 investigatePosition;
+
+
         
         //Constructor
 
@@ -60,7 +67,6 @@ using UnityEngine.AI;
             navMeshAgent=GetComponent<NavMeshAgent>();
             player=FindAnyObjectByType<Player>();
             enemyAnimator=GetComponent<EnemyAnimator>();
-            stateEnemy=EnemyState.Patrol;
 
 
             if (player == null||enemyAnimator==null)//Si no encuentra al player desactivamos los update
@@ -68,7 +74,9 @@ using UnityEngine.AI;
                 Debug.LogWarning("No se ha encontrado ningun jugador o componente animator",this);
                 enabled = false;
             }
+            stateEnemy=EnemyState.Patrol;
             navMeshAgent.speed=chasingSpeed;
+
 
         }
     /*___________________________________________________________________________________
@@ -78,49 +86,75 @@ using UnityEngine.AI;
     |                                                                                    |
     |____________________________________________________________________________________|
     */
-        void Update()
-        {  
-            CheckIsDead();
-            UpdateState();
-            ExecuteState();
-            UpdateAnimation();
+    void OnEnable()
+    {
+        Damaged+=OnDamaged;
+    }
 
-        }
+    void OnDisable()
+    {
+        Damaged-=OnDamaged;
+        
+    }
 
-        private void UpdateAnimation() //Con el estado actual sabemos la animacion a reproducir
-        {
-            enemyAnimator.SetState(stateEnemy);
-            
-        }
-        protected virtual void UpdateState()
-        {   
-            
-            if(stateEnemy==EnemyState.Dead) return;  
+    private void OnDamaged(Entity e, Vector3 sourceDamage)
+    {
+        if (IsDead || stateEnemy == EnemyState.Dead) return;
 
-            float DistanceFromPlayer=CalculateDistanceFromAPoint(player.transform);
-            if(Time.time>=nextPathUpdate){
-                if(DistanceFromPlayer<= AttackRange){
+        // Si ya está persiguiendo o atacando al jugador, ignoramos la investigación
+        if (stateEnemy == EnemyState.Chasing || stateEnemy == EnemyState.Attack) return;
+
+        investigatePosition = sourceDamage;
+        ChangeState(EnemyState.Investigating);
+    }
+    void Update()
+    {  
+        CheckIsDead();
+        UpdateState();
+        ExecuteState();
+        UpdateAnimation();
+
+    }
+
+    protected virtual bool CanSeePlayer()//Comprueba con raycast si tiene vision del target
+    {       
+        return true; 
+    }
+
+    private void UpdateAnimation() //Con el estado actual sabemos la animacion a reproducir
+    {
+        enemyAnimator.SetState(stateEnemy);
+        
+    }
+    protected  void UpdateState()
+    {
+        if(StateEnemy==EnemyState.Dead) return;  
+
+            float DistanceFromPlayer=CalculateDistanceFromAPoint(PlayerTarget.transform);
+            if(Time.time>=NextPathUpdate){
+                if(DistanceFromPlayer<= AttackRange&&CanSeePlayer()){
                     ChangeState(EnemyState.Attack);                              
                 }
                 else if (DistanceFromPlayer<=RangeDetection)
                 {
                     ChangeState(EnemyState.Chasing);
                 }
-                else
+                else if (stateEnemy != EnemyState.Investigating)
                 {
                     ChangeState(EnemyState.Patrol);                              
 
                     
                 }
-                nextPathUpdate=Time.time+updatePathRate;
-            }         
-        }
+                NextPathUpdate=Time.time+UpdatePathRate;
+            }   
+    }
 
-        protected float CalculateDistanceFromAPoint(Transform point)//Nos devuelve la distancia entre el enemigo y el player
-        {
-            return Vector3.Distance(transform.position,point.position);
 
-        }
+    protected float CalculateDistanceFromAPoint(Transform point)//Nos devuelve la distancia entre el enemigo y el player
+    {
+        return Vector3.Distance(transform.position,point.position);
+
+    }
 
     /*___________________________________________________________________________________
     |                                                                                    |
@@ -128,15 +162,7 @@ using UnityEngine.AI;
     |--------------------------------[Ejecucion de los estados]--------------------------|
     |                                                                                    |
     |____________________________________________________________________________________|
-    */
-        private void Chasing()
-        {   
-            navMeshAgent.isStopped=false;
-            navMeshAgent.destination=player.transform.position;
-            navMeshAgent.speed=chasingSpeed;
-            
-        }
-
+    */  
         protected void ExecuteState()
         {
             switch (stateEnemy)
@@ -149,11 +175,33 @@ using UnityEngine.AI;
                 case EnemyState.Patrol: 
                     navMeshAgent.stoppingDistance=DistanceToChangeWayPoint; 
                     Patrol(); break;
+                case EnemyState.Investigating:
+                    Investigating();
+                    break;
                 case EnemyState.Dead:  
                     break;
 
             }
         }
+
+        private void Investigating()
+        {   
+            navMeshAgent.isStopped=false;
+            navMeshAgent.destination=investigatePosition;
+            navMeshAgent.speed=investigatingSpeed;
+
+            bool hasArrived =!navMeshAgent.pathPending&&navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
+
+            if(hasArrived) Patrol();
+        }
+        private void Chasing()
+        {   
+            navMeshAgent.isStopped=false;
+            navMeshAgent.destination=player.transform.position;
+            navMeshAgent.speed=chasingSpeed;
+            
+        }
+
         protected abstract void Attack();//Cada enemigo implementa su forma de ataque
        
 
@@ -162,20 +210,23 @@ using UnityEngine.AI;
             if (IsDead || player == null || player.IsDead) return;
             if (CalculateDistanceFromAPoint(player.transform) > attackRange) return;
 
-            player.TakeDamage(damage);
+            player.TakeDamage(damage,transform.position);
         }
         
 
        private void Patrol()
        {
-            if (wayPoints.Length == 0||wayPoints==null) return;
+            if (wayPoints==null||wayPoints.Length == 0) return;
+
+            navMeshAgent.isStopped = false;
+            navMeshAgent.stoppingDistance = DistanceToChangeWayPoint;
+            navMeshAgent.speed = patrolingSpeed;
 
             bool hasArrived = !navMeshAgent.pathPending
                             && navMeshAgent.remainingDistance <= DistanceToChangeWayPoint;
 
             if (!hasArrived) return;
             
-            navMeshAgent.speed=patrolingSpeed;
             currentWaypoint = Random.Range(0,wayPoints.Length);
 
             if(wayPoints.Length>1){

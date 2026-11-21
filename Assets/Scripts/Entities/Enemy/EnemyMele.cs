@@ -15,9 +15,9 @@ public class EnemyMele : Enemy
         enemyAnimator.OnDealDamage-=TakeDamagePlayer;
     }
     protected override void Attack()
-    {
+    {   
         if (Time.time < attackRateTime) return;
-
+        Agent.isStopped=true;
         attackRateTime = Time.time + attackRate;
         enemyAnimator.PlayAttack();
     }

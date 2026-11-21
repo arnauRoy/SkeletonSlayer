@@ -6,17 +6,19 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask entityMask;
 
     [SerializeField] private int damage;
+    private Vector3 shotOrigin;
 
-    public void Initialize(Collider ownerCollider,int damage)
+    public void Initialize(Entity owner, int damage)
     {
-        Collider bulletCollider=GetComponent<Collider>();
+        this.damage = damage;
+        shotOrigin = owner.transform.position;   // se guarda ahora: el dueño se moverá después
 
-        this.damage=damage;
+        Collider bulletCollider = GetComponentInChildren<Collider>();
 
-        Physics.IgnoreCollision(
-            bulletCollider,
-            ownerCollider
-        );
+        foreach (Collider c in owner.GetComponentsInChildren<Collider>())//Por cada componente con collider en el owner lo ignora en la collision
+        {
+            if (c.enabled) Physics.IgnoreCollision(bulletCollider, c);
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -29,7 +31,7 @@ public class Bullet : MonoBehaviour
             
             if (collision.gameObject.TryGetComponent<Entity>(out Entity entity))
             {
-                entity.TakeDamage(damage);
+                entity.TakeDamage(damage,shotOrigin);
                 Destroy(gameObject);
             }
         }

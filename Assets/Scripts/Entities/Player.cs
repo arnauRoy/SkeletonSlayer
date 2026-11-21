@@ -32,7 +32,7 @@ public class Player : Entity
         
     }
 
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(int damage,Vector3 source)
     {
         if (IsDead) return;
 
@@ -46,13 +46,13 @@ public class Player : Entity
             ShieldUpdated?.Invoke(shield,maxShield);
             if (remainingDamage > 0 )
             {
-                base.TakeDamage(remainingDamage);
+                base.TakeDamage(remainingDamage,source);
             }
             
         }
         else
         {
-            base.TakeDamage(damage);
+            base.TakeDamage(damage,source);
         }     
     }
     public override void OnEntityDead()
