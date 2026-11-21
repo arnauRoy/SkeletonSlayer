@@ -23,8 +23,9 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private bool isSprinting;
-
     private bool requestJump;
+
+    private bool requestShoot;
 
 
     [Header("Weapon")] 
@@ -77,12 +78,15 @@ public class PlayerController : MonoBehaviour
         vertical = move.y;
 
         isSprinting = sprintAction.action.IsPressed();
-        requestJump = jumpAction.action.WasPressedThisFrame();
+
+            
+        if (jumpAction.action != null && jumpAction.action.WasPressedThisFrame())requestJump = true;
+        
         look.Rotate(lookAction.action.ReadValue<Vector2>());
 
         if(rechargeAction.action.WasPressedThisFrame())weapon.Recharge();
 
-        if(shootAction.action.WasCompletedThisFrame())weapon.Shoot();
+        if(shootAction.action!=null&&shootAction.action.WasPressedThisFrame())requestShoot=true;
         
     }
 
@@ -91,5 +95,8 @@ public class PlayerController : MonoBehaviour
     {
         //Pasem tota la informació dels inputs a la clase encarregada de gestionar el moviment
         movement.MoveEntity(horizontal, vertical,isSprinting,requestJump);
+        if(requestShoot)weapon.Shoot();
+        requestJump=false;
+        requestShoot=false;
     }
 }

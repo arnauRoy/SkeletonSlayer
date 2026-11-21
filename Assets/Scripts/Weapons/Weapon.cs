@@ -38,9 +38,14 @@ public class Weapon : MonoBehaviour
 
     private bool infiniteAmmo=false;
 
+    //---------------[Animator]---------------
+    [SerializeField]private WeaponAnimator weaponAnimator;
+
+
     void Awake()
     {
         ownerCollider=GetComponentInParent<Collider>();
+        weaponAnimator=GetComponent<WeaponAnimator>();
     }
     private void ShowAmmoEvent(int ammo, int ammoInMagazine)
     {
@@ -99,6 +104,9 @@ public class Weapon : MonoBehaviour
             Rigidbody rb = newBullet.GetComponent<Rigidbody>();
 
             rb.linearVelocity=bulletDirection*bulletSpeed;
+
+            if(weaponAnimator!=null)weaponAnimator.shootAnimation();//Animmamos el disparo
+
             shotRateTime=Time.time+shootRate; //le suma el rate al tiempo actual limitando el disparo
             Destroy(newBullet,2);
             if(!infiniteAmmo) ShowAmmoEvent(ammo,--ammoInMagazine);
