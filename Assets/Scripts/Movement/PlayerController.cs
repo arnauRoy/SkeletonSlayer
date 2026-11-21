@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputActionReference shootAction;
     [SerializeField] private InputActionReference rechargeAction;
 
-
-
     [Header("Movement")]
     private Movement movement;
     private Look look;
@@ -24,9 +22,6 @@ public class PlayerController : MonoBehaviour
     private float vertical;
     private bool isSprinting;
     private bool requestJump;
-
-    private bool requestShoot;
-
 
     [Header("Weapon")] 
     private Weapon weapon;
@@ -70,8 +65,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    //-------------------[Actualizaciones de input]-------------------
     private void Update()
     {   
+        HandleMovementInput();
+
+        HandleWeaponInput();
+        
+    }
+
+    private void HandleMovementInput()
+    {
         //Llegim els inputs de totes les accions
         Vector2 move = moveAction.action.ReadValue<Vector2>();//Llegim els valors dels inputs d'aquesta acció
         horizontal = move.x;
@@ -79,15 +83,24 @@ public class PlayerController : MonoBehaviour
 
         isSprinting = sprintAction.action.IsPressed();
 
-            
         if (jumpAction.action != null && jumpAction.action.WasPressedThisFrame())requestJump = true;
-        
+
         look.Rotate(lookAction.action.ReadValue<Vector2>());
 
-        if(rechargeAction.action.WasPressedThisFrame())weapon.Recharge();
 
-        if(shootAction.action!=null&&shootAction.action.WasPressedThisFrame())requestShoot=true;
-        
+    }
+
+
+    private void HandleWeaponInput()
+    {
+        if (weapon != null)
+        {
+            if (rechargeAction.action != null && rechargeAction.action.WasPressedThisFrame())
+                weapon.Recharge();
+
+            if (shootAction.action != null && shootAction.action.WasPressedThisFrame())
+                weapon.Shoot();
+        }
     }
 
 
@@ -95,8 +108,6 @@ public class PlayerController : MonoBehaviour
     {
         //Pasem tota la informació dels inputs a la clase encarregada de gestionar el moviment
         movement.MoveEntity(horizontal, vertical,isSprinting,requestJump);
-        if(requestShoot)weapon.Shoot();
         requestJump=false;
-        requestShoot=false;
     }
 }

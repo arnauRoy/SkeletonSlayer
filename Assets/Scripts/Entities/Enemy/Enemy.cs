@@ -73,6 +73,7 @@ using UnityEngine.AI;
             {
                 Debug.LogWarning("No se ha encontrado ningun jugador o componente animator",this);
                 enabled = false;
+                return;
             }
             stateEnemy=EnemyState.Patrol;
             navMeshAgent.speed=chasingSpeed;
@@ -86,12 +87,12 @@ using UnityEngine.AI;
     |                                                                                    |
     |____________________________________________________________________________________|
     */
-    void OnEnable()
+    protected virtual void OnEnable()
     {
         Damaged+=OnDamaged;
     }
 
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         Damaged-=OnDamaged;
         
@@ -128,7 +129,7 @@ using UnityEngine.AI;
     }
     protected  void UpdateState()
     {
-        if(StateEnemy==EnemyState.Dead) return;  
+        if(StateEnemy==EnemyState.Dead||player==null) return;  
 
             float DistanceFromPlayer=CalculateDistanceFromAPoint(PlayerTarget.transform);
             if(Time.time>=NextPathUpdate){
@@ -187,17 +188,19 @@ using UnityEngine.AI;
         private void Investigating()
         {   
             navMeshAgent.isStopped=false;
+            navMeshAgent.stoppingDistance = 0.5f;
             navMeshAgent.destination=investigatePosition;
             navMeshAgent.speed=investigatingSpeed;
 
             bool hasArrived =!navMeshAgent.pathPending&&navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
 
-            if(hasArrived) Patrol();
+            if(hasArrived) ChangeState(EnemyState.Patrol);
         }
         private void Chasing()
         {   
             navMeshAgent.isStopped=false;
             navMeshAgent.destination=player.transform.position;
+            navMeshAgent.stoppingDistance = attackRange * 0.8f;
             navMeshAgent.speed=chasingSpeed;
             
         }

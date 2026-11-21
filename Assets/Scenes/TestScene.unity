@@ -7236,7 +7236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 128405962069124748, guid: f755d9f5a1a5f4986a7b84e8c289c01f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 757695617594850358, guid: f755d9f5a1a5f4986a7b84e8c289c01f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9878,6 +9878,10 @@ PrefabInstance:
     - target: {fileID: 2505170828918142866, guid: f7a71def94b1f6b97b3d25f56fb8ba40, type: 3}
       propertyPath: m_Name
       value: SkeletonDistanceEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2505170828918142866, guid: f7a71def94b1f6b97b3d25f56fb8ba40, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2994884080302452008, guid: f7a71def94b1f6b97b3d25f56fb8ba40, type: 3}
       propertyPath: m_LocalPosition.x
