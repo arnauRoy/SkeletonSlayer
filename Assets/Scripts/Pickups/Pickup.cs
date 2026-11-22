@@ -4,6 +4,7 @@ public abstract class Pickup : MonoBehaviour
 {
 
     private bool isActive;
+    private bool isUnlocked;//Si es verdadero el timer de respawn no funcionara
 
     //----------------[Respawn del pickup]----------------
 
@@ -37,22 +38,39 @@ public abstract class Pickup : MonoBehaviour
 
     }
 
+   public void Activate()
+    {
+        isUnlocked = true;
+        SetState(true);
+    }
+
+    public void Deactivate()
+    {
+        isUnlocked = false;
+        SetState(false);
+    }
+
+    private void SetState(bool state)
+    {
+        isActive = state;
+        ToggleRenderer(state);
+        ToggleCollider(state);
+        TogglePickupLight(state);
+    }
     private void RespawnPickup()
     {   
         if(isActive) return;
 
         if (Time.time > respawnTimer)  
         {   
-            ToggleRenderer(true);
-            ToggleCollider(true);
-            TogglePickupLight(true);
-            isActive=true; 
+          SetState(true);
               
         }
     }
 
     private void ToggleRenderer(bool toogle)
-    {
+    {   
+        if(pickupRenderer==null||pickupRenderer.Length<=0)return;
         foreach(Renderer r in pickupRenderer)
         {
             r.enabled=toogle;
@@ -60,7 +78,9 @@ public abstract class Pickup : MonoBehaviour
     }
 
      private void ToggleCollider(bool toogle)
-    {
+    {   
+        if(pickupCollider==null||pickupCollider.Length<=0)return;
+
         foreach(Collider r in pickupCollider)
         {
             r.enabled=toogle;
@@ -91,7 +111,7 @@ public abstract class Pickup : MonoBehaviour
     {   
         if (isActive)
             Spin();
-        else if(canRespawn)
+        else if(canRespawn&&isUnlocked)
             RespawnPickup();
     }
     protected virtual void Spin()
