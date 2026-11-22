@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviour
         spawner.WavesCompleted+=LoadWinScene;
     }
 
-    
-
     void OnDisable()
     {   
         player.Died-=HandlePlayerDead;
