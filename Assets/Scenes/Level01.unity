@@ -2576,6 +2576,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2118058139676725025, guid: 07b176f19a7b45447893ce5ab468919f, type: 3}
+      propertyPath: hud
+      value: 
+      objectReference: {fileID: 427079111}
     - target: {fileID: 2527308630238195877, guid: 07b176f19a7b45447893ce5ab468919f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -10911,6 +10915,7 @@ MonoBehaviour:
   actualWaveText: {fileID: 598205521}
   totalWavesText: {fileID: 812108840}
   moneyHud: {fileID: 427079112}
+  shopPanel: {fileID: 427079113}
 --- !u!114 &427079112
 MonoBehaviour:
   m_ObjectHideFlags: 0

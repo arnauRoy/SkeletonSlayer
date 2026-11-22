@@ -1,9 +1,13 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Movement), typeof(Look))]
 public class PlayerController : MonoBehaviour
 {
+
+    [SerializeField]private Hud hud;
+
     [Header("Input")]
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference lookAction;
@@ -17,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     private Movement movement;
     private Look look;
+    private bool blockByUi;
 
     private float horizontal;
     private float vertical;
@@ -25,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Weapon")] 
     private Weapon weapon;
+
 
     private void Awake()
     {
@@ -49,6 +55,8 @@ public class PlayerController : MonoBehaviour
         shootAction.action.Enable();
         rechargeAction.action.Enable();
 
+        hud.OnInteractionUI+=OnPlayerInUi;
+
     }
 
     private void OnDisable()
@@ -60,9 +68,19 @@ public class PlayerController : MonoBehaviour
         shootAction.action.Disable();
         rechargeAction.action.Disable();
 
+        hud.OnInteractionUI-=OnPlayerInUi;
+
+
         Cursor.lockState=CursorLockMode.None;//Al acabar resetejem tot
         Cursor.visible=true;
 
+    }
+
+    private void OnPlayerInUi(bool inUi)
+    {
+        blockByUi = inUi;
+        // Negamos inUi para que isActive signifique "activo en juego" y no "en UI"
+        SetLookAndWeaponActive(!inUi);
     }
 
     //-------------------[Actualizaciones de input]-------------------
@@ -70,7 +88,8 @@ public class PlayerController : MonoBehaviour
     {   
         HandleMovementInput();
 
-        HandleWeaponInput();
+        if(!blockByUi)HandleWeaponInput();
+
         
     }
 
@@ -85,9 +104,7 @@ public class PlayerController : MonoBehaviour
 
         if (jumpAction.action != null && jumpAction.action.WasPressedThisFrame())requestJump = true;
 
-        look.Rotate(lookAction.action.ReadValue<Vector2>());
-
-
+        if(!blockByUi)look.Rotate(lookAction.action.ReadValue<Vector2>());
     }
 
 
@@ -101,6 +118,15 @@ public class PlayerController : MonoBehaviour
             if (shootAction.action != null && shootAction.action.WasPressedThisFrame())
                 weapon.Shoot();
         }
+    }
+
+    private void SetLookAndWeaponActive(bool isActive)
+    {
+        if (look != null) look.enabled = isActive;
+        if (weapon != null) weapon.enabled = isActive;
+
+        Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !isActive;
     }
 
 

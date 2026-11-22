@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,18 +27,30 @@ public class Hud : MonoBehaviour
     
    //----------------Money----------------
     [SerializeField] private MoneyHud moneyHud;
+
+   //----------------Shop----------------
+
+   [SerializeField]private ShopPanel shopPanel;
+
     private Wallet wallet; 
+
+    //----------------Actions----------------
+    public event Action<bool> OnInteractionUI;
 
     private void OnEnable()
     {   
-        // suscribirse al evento del arma
-        // pintar el valor actual una vez, para no esperar al primer disparo
+        if (moneyHud == null)
+            moneyHud = GetComponent<MoneyHud>();
+        // suscribirse a eventos
         weapon.AmmoUpdate+=UpdateAmmo;
+        player.HealthUpdated+=UpdateHealth;
+        player.ShieldUpdated+=UpdateShield;
+        if (shopPanel != null) shopPanel.OnShopOpen += onPlayerInUI;
+        // pintar el valor actual una vez, para no esperar al primer update
         UpdateAmmo(weapon.Ammo,weapon.AmmoInMagazine);
         UpdateHealth(player.Health,player.MaxHealth);
         UpdateShield(player.Shield,player.MaxShield);
-        player.HealthUpdated+=UpdateHealth;
-        player.ShieldUpdated+=UpdateShield;
+     
 
         wallet = GameSession.Instance.Wallet;
         wallet.MoneyChanged += OnMoneyChanged;
@@ -48,7 +61,11 @@ public class Hud : MonoBehaviour
         waveSpawner.EnemiesAliveChanged+=UpdateEnemiesWave;
         waveSpawner.WaveStarted+=UpdateWaves;
 
-        moneyHud=GetComponent<MoneyHud>();
+    }
+
+    private void onPlayerInUI(bool state)
+    {
+        OnInteractionUI?.Invoke(state);
     }
 
     private void OnDisable()
@@ -57,7 +74,7 @@ public class Hud : MonoBehaviour
         weapon.AmmoUpdate-=UpdateAmmo;
         player.HealthUpdated-=UpdateHealth;
         player.ShieldUpdated-=UpdateShield;
-
+        shopPanel.OnShopOpen-=onPlayerInUI;
         
         
         if (wallet != null) wallet.MoneyChanged -= OnMoneyChanged;     // valor inicial

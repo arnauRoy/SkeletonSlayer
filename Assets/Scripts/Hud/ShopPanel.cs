@@ -1,20 +1,24 @@
 using UnityEngine;
+using System;
 
 public class ShopPanel : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
 
+    public event Action<bool> OnShopOpen;
+
     public void OpenShop()
     {
         panel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        OnShopOpen?.Invoke(true);
+       
     }
 
     public void CloseShop()
     {
         panel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        OnShopOpen?.Invoke(false);
+
+        
     }
 }
