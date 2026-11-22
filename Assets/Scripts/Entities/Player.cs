@@ -28,8 +28,6 @@ public class Player : Entity
     private void CheckIsDead()
     {
         if (IsDead) OnEntityDead();
-      
-        
     }
 
     public override void TakeDamage(int damage,Vector3 source)
@@ -63,6 +61,25 @@ public class Player : Entity
        deadHandled=true;
        base.OnEntityDead();
 
+    }
+
+    public void recibeShield(int shield)
+    {
+        if(IsDead) return;
+        int shieldNeeded=maxShield-shield;
+        int shieldToCure=Math.Min(shieldNeeded,shield);
+
+        shield+=shieldToCure;
+
+       ShieldUpdated?.Invoke(shield,maxShield);
+        
+    }
+
+    public int Shield{
+        get{return shield;}
+    }
+    public int MaxShield{
+        get{return maxShield;}
     }
     
 }

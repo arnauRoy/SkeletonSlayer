@@ -45,7 +45,7 @@ public abstract class Pickup : MonoBehaviour
         {   
             ToggleRenderer(true);
             ToggleCollider(true);
-            pickupLight.enabled=true;
+            TogglePickupLight(true);
             isActive=true; 
               
         }
@@ -66,7 +66,14 @@ public abstract class Pickup : MonoBehaviour
             r.enabled=toogle;
         }
     }
+    
+    private void TogglePickupLight(bool state)
+    {
+        if(pickupLight==null)return;
 
+        pickupLight.enabled=state;
+
+    }
     protected virtual void collectPickup(Player player)
     {
         if (!isActive) return;
@@ -76,7 +83,7 @@ public abstract class Pickup : MonoBehaviour
 
         ToggleCollider(false);
 
-        pickupLight.enabled=false;
+        TogglePickupLight(false);
 
         respawnTimer=Time.time+respawnTime;
     }
