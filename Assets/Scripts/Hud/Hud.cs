@@ -34,6 +34,8 @@ public class Hud : MonoBehaviour
         // pintar el valor actual una vez, para no esperar al primer disparo
         weapon.AmmoUpdate+=UpdateAmmo;
         UpdateAmmo(weapon.Ammo,weapon.AmmoInMagazine);
+        UpdateHealth(player.Health,player.MaxHealth);
+        UpdateShield(player.Shield,player.MaxShield);
         player.HealthUpdated+=UpdateHealth;
         player.ShieldUpdated+=UpdateShield;
 
