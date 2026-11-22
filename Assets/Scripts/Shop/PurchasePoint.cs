@@ -6,9 +6,10 @@ public class PurchasePoint : MonoBehaviour
     [SerializeField]private ShopOffer offer;
     private bool purchased=false;
     [SerializeField] private UnityEvent onPurchased;
+    public ShopOffer Offer => offer;
+    public bool IsSoldOut => offer != null && offer.oneTimePurchase && purchased;
 
-
-    private bool tryBuy()
+    public bool TryBuy()
     {
         if(offer.oneTimePurchase&&purchased)return false;
 
@@ -25,10 +26,4 @@ public class PurchasePoint : MonoBehaviour
         
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponentInParent<Player>() == null) return;
-
-        tryBuy();
-    }
 }
