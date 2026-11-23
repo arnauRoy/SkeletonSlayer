@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private InputActionReference shootAction;
     [SerializeField] private InputActionReference rechargeAction;
+    [SerializeField] private InputActionReference throwGrenadeAction;
+
 
     [Header("Movement")]
     private Movement movement;
@@ -30,6 +33,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("Weapon")] 
     private Weapon weapon;
+
+    [SerializeField] private GameObject grenade;
+    [SerializeField] private float throwGrenadeForce=10f;
+
+    [SerializeField] private Transform holderGrenade;
+
 
 
     private void Awake()
@@ -54,6 +63,7 @@ public class PlayerController : MonoBehaviour
         jumpAction.action.Enable();
         shootAction.action.Enable();
         rechargeAction.action.Enable();
+        throwGrenadeAction.action.Enable();
 
         hud.OnInteractionUI+=OnPlayerInUi;
 
@@ -67,6 +77,8 @@ public class PlayerController : MonoBehaviour
         jumpAction.action.Disable();
         shootAction.action.Disable();
         rechargeAction.action.Disable();
+        throwGrenadeAction.action.Disable();
+
 
         hud.OnInteractionUI-=OnPlayerInUi;
 
@@ -90,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
         if(!blockByUi)HandleWeaponInput();
 
+        if(!blockByUi)HandleGrenadeInput();
         
     }
 
@@ -117,6 +130,21 @@ public class PlayerController : MonoBehaviour
 
             if (shootAction.action != null && shootAction.action.WasPressedThisFrame())
                 weapon.Shoot();
+        }
+    }
+
+    private void HandleGrenadeInput()
+    {
+        if (throwGrenadeAction.action.WasPressedThisFrame())
+        {   
+           GameObject explosiveGrenade = Instantiate(
+                grenade,
+                holderGrenade.position,
+                holderGrenade.rotation
+            );
+            Rigidbody rb=explosiveGrenade.GetComponent<Rigidbody>();
+
+            rb.linearVelocity=holderGrenade.transform.forward*throwGrenadeForce;
         }
     }
 

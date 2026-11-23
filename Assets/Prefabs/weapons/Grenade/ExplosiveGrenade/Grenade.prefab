@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8152976659052778603}
   - component: {fileID: 8341836516443835900}
+  - component: {fileID: 9050332983923693279}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
@@ -51,9 +52,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveGrenade
   explosionForce: 15
   upwardsModifier: 1.2
-  delayExplosion: 5
+  delayExplosion: 2
   radiusExplosion: 5
   damage: 60
+--- !u!54 &9050332983923693279
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966233753764215072}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1347908569424462475
 GameObject:
   m_ObjectHideFlags: 0
@@ -19859,8 +19887,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.60308486
+  m_Center: {x: 0, y: 0.012706337, z: 0.00002927002}
 --- !u!1 &4582758027467583929
 GameObject:
   m_ObjectHideFlags: 0
