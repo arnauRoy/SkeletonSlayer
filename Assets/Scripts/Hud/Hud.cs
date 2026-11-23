@@ -16,6 +16,8 @@ public class Hud : MonoBehaviour
     [SerializeField] private Weapon weapon;
     [SerializeField] private TMP_Text totalAmmoText;
     [SerializeField] private TMP_Text ammoInMagazineText;
+    [SerializeField] private RawImage CrossHair;
+
 
     //----------------InfoWave----------------
     [SerializeField] private WaveSpawner waveSpawner;
@@ -66,6 +68,8 @@ public class Hud : MonoBehaviour
     private void onPlayerInUI(bool state)
     {
         OnInteractionUI?.Invoke(state);
+
+        if(CrossHair!=null)CrossHair.enabled=!state;//Si esta en la tienda contrario desactivamos la mirilla
     }
 
     private void OnDisable()
