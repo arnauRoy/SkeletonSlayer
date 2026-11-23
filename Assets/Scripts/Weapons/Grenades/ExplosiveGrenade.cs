@@ -1,32 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ExplosiveGrenade : MonoBehaviour
-{   
-
+{
     //----------------[GrenadeStats]----------------
     private float countDown;
-    private bool exploded=false;
-    [SerializeField] private float explosionForce=700f;
+    private bool exploded = false;
 
-    [SerializeField] private float delayExplosion=5f;
-    [SerializeField] private float radiusExplosion=5f;
-
-    [SerializeField]private int damage=60;
-
+    [SerializeField] private float explosionForce = 15f; // Con Impulse, valores entre 10 y 25 funcionan bien
+    [SerializeField] private float upwardsModifier = 1.2f; // Levanta un poco al objetivo para vencer la fricción del suelo
+    [SerializeField] private float delayExplosion = 5f;
+    [SerializeField] private float radiusExplosion = 5f;
+    [SerializeField] private int damage = 60;
 
     void Start()
     {
-        countDown=delayExplosion;
+        countDown = delayExplosion;
     }
 
-
     void Update()
-    {   
-        if(exploded)return;
+    {
+        if (exploded) return;
 
-        countDown-=Time.deltaTime;
+        countDown -= Time.deltaTime;
 
-        if (countDown <= 0)
+        if (countDown <= 0f)
         {
             Explode();
         }
@@ -34,26 +32,39 @@ public class ExplosiveGrenade : MonoBehaviour
 
     void Explode()
     {
-        Collider[] colliders=Physics.OverlapSphere(transform.position,radiusExplosion);
+        exploded = true;
 
-        foreach(Collider c in colliders)
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radiusExplosion);
+
+        // Evita aplicar daño o fuerza dos veces a un mismo objeto con múltiples colliders
+        //Coleccion que no guarda duplicados
+        HashSet<Entity> damagedEntities = new HashSet<Entity>();
+        HashSet<Rigidbody> pushedRigidbodies = new HashSet<Rigidbody>();
+
+        foreach (Collider c in colliders)
         {
-            Rigidbody rb=c.GetComponent<Rigidbody>();
-            Entity e = c.GetComponent<Entity>();
+            // 1. Daño (buscamos en el propio objeto o en sus padres)
+            Entity e = c.GetComponentInParent<Entity>();
             
-            //Comprobamos si estan en el child los componentes
-            if (rb == null)rb = c.GetComponentInParent<Rigidbody>();
-            
-            if (e == null)e=c.GetComponentInChildren<Entity>();
+            if (e != null && damagedEntities.Add(e))//Al añadir devuelve bool si se ha añadido y este objeto no estaba ya
+            {
+                e.TakeDamage(damage, transform.position);
+            }
 
-            //CAplicamos el efecto de la granada a los componentes
-
-            if (rb!=null)rb.AddExplosionForce(explosionForce,transform.position,radiusExplosion);
-          
-            if (e != null)e.TakeDamage(damage,transform.position);
-           
+            // 2. Empuje físico
+            Rigidbody rb = c.attachedRigidbody;//Devuelve directamente el rigidbody que contrala la fisica del collider
+            //Evita usar GetComponentInParent y GetComponentInChildren
+            if (rb != null && !rb.isKinematic && pushedRigidbodies.Add(rb))
+            {
+                rb.AddExplosionForce(
+                    explosionForce,
+                    transform.position,
+                    radiusExplosion,
+                    upwardsModifier,
+                    ForceMode.Impulse
+                );
+            }
         }
-        exploded=true;
 
         Destroy(gameObject);
     }
