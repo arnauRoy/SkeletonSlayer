@@ -47,6 +47,7 @@ public class Hud : MonoBehaviour
         weapon.AmmoUpdate+=UpdateAmmo;
         player.HealthUpdated+=UpdateHealth;
         player.ShieldUpdated+=UpdateShield;
+
         if (shopPanel != null) shopPanel.OnShopOpen += onPlayerInUI;
         // pintar el valor actual una vez, para no esperar al primer update
         UpdateAmmo(weapon.Ammo,weapon.AmmoInMagazine);
@@ -58,7 +59,7 @@ public class Hud : MonoBehaviour
         wallet.MoneyChanged += OnMoneyChanged;
         OnMoneyChanged(wallet.CurrentMoney); 
 
-
+        //Eventos del spawner
         if(waveSpawner==null)return;
         waveSpawner.EnemiesAliveChanged+=UpdateEnemiesWave;
         waveSpawner.WaveStarted+=UpdateWaves;
@@ -84,7 +85,7 @@ public class Hud : MonoBehaviour
         if (wallet != null) wallet.MoneyChanged -= OnMoneyChanged;     // valor inicial
 
         if(waveSpawner==null)return;
-
+        // darse de baja spawner
         waveSpawner.EnemiesAliveChanged-=UpdateEnemiesWave;
         waveSpawner.WaveStarted-=UpdateWaves;
     }
