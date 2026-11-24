@@ -55,7 +55,7 @@ MonoBehaviour:
   delayExplosion: 2
   radiusExplosion: 5
   damage: 60
-  explosionEffectPrefab: {fileID: 5160536936926729996, guid: 8f28518368db8626c96e479b1db722b8, type: 3}
+  explosionEffectPrefab: {fileID: 1121192042590650, guid: e94a9b4243e9ec91089b0b255693d8e3, type: 3}
 --- !u!54 &9050332983923693279
 Rigidbody:
   m_ObjectHideFlags: 0
