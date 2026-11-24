@@ -55,6 +55,7 @@ MonoBehaviour:
   delayExplosion: 2
   radiusExplosion: 5
   damage: 60
+  explosionEffectPrefab: {fileID: 5160536936926729996, guid: 8f28518368db8626c96e479b1db722b8, type: 3}
 --- !u!54 &9050332983923693279
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81,7 +82,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &1347908569424462475
 GameObject:
   m_ObjectHideFlags: 0
@@ -19171,7 +19172,6 @@ GameObject:
   - component: {fileID: 7924278493687733183}
   - component: {fileID: 4490612439884493052}
   - component: {fileID: 8005530537938501220}
-  - component: {fileID: 4673905504957874364}
   m_Layer: 0
   m_Name: PickGrenade
   m_TagString: Untagged
@@ -19754,28 +19754,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4001939604610973697}
-  m_Mesh: {fileID: 0}
---- !u!64 &4673905504957874364
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4001939604610973697}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &4175194634536618303
 GameObject:

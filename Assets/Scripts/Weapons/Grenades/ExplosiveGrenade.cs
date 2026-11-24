@@ -13,6 +13,9 @@ public class ExplosiveGrenade : MonoBehaviour
     [SerializeField] private float radiusExplosion = 5f;
     [SerializeField] private int damage = 60;
 
+    [Header("Visual Effects")]
+    [SerializeField] private GameObject explosionEffectPrefab;
+
     void Start()
     {
         countDown = delayExplosion;
@@ -33,6 +36,7 @@ public class ExplosiveGrenade : MonoBehaviour
     void Explode()
     {
         exploded = true;
+        if(explosionEffectPrefab!=null) Instantiate(explosionEffectPrefab,transform.position,Quaternion.identity);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, radiusExplosion);
 
@@ -68,4 +72,14 @@ public class ExplosiveGrenade : MonoBehaviour
 
         Destroy(gameObject);
     }
+    private void OnDrawGizmos()
+{
+    // Relleno semitransparente para apreciar el volumen completo
+    Gizmos.color = new Color(1f, 0.3f, 0f, 0.25f);
+    Gizmos.DrawSphere(transform.position, radiusExplosion);
+
+    // Borde exterior bien definido
+    Gizmos.color = new Color(1f, 0.3f, 0f, 1f);
+    Gizmos.DrawWireSphere(transform.position, radiusExplosion);
+}
 }
