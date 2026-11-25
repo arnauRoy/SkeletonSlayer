@@ -11,6 +11,8 @@ public class ShopItemButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private TextMeshProUGUI errorBuyText;
+    [SerializeField] private TextMeshProUGUI amountText;
+
 
 
     [SerializeField] private float durationFailedPurchasedText=1f;
@@ -25,6 +27,9 @@ public class ShopItemButton : MonoBehaviour
         //Comprobamos si tiene item y si tiene icono para añadirselo a la imagen
         Sprite spriteImage = purchasePoint?.Offer?.item?.icon;
         if(itemImage!=null &&spriteImage!=null)itemImage.sprite=spriteImage;
+
+        int? amount=purchasePoint?.Offer?.amount;
+        if(amountText!=null &&amount!=null)amountText.text=amount.ToString();
 
         buyButton.onClick.AddListener(OnBuyClicked);
         RefreshState();
