@@ -376,7 +376,8 @@ MonoBehaviour:
   throwGrenadeAction: {fileID: 532699946766962756, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   grenade: {fileID: 966233753764215072, guid: 7cf82651d9b7e6c7a93f983f21fa80cc, type: 3}
   throwGrenadeForce: 10
-  holderGrenade: {fileID: 0}
+  holderGrenade: {fileID: 8210648635766992422}
+  grenadeData: {fileID: 11400000, guid: 065177b0ffc213708ac4d80331db4b98, type: 2}
 --- !u!114 &7539232918066557097
 MonoBehaviour:
   m_ObjectHideFlags: 0

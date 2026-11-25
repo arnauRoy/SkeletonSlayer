@@ -19,6 +19,8 @@
 
         private bool onGround;
 
+        public Vector3 Velocity => rb != null ? rb.linearVelocity : Vector3.zero;//Getter de la velocidad actual del rigidbody
+
         
         
         //Funcion que genera todo el movimiento

@@ -1,5 +1,3 @@
-using System;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,13 +29,14 @@ public class PlayerController : MonoBehaviour
     private bool isSprinting;
     private bool requestJump;
 
-    [Header("Weapon")] 
+    [Header("Weapons")] 
     private Weapon weapon;
 
     [SerializeField] private GameObject grenade;
     [SerializeField] private float throwGrenadeForce=10f;
-
     [SerializeField] private Transform holderGrenade;
+
+    [SerializeField] private ItemData grenadeData;
 
 
 
@@ -135,16 +134,26 @@ public class PlayerController : MonoBehaviour
 
     private void HandleGrenadeInput()
     {
-        if (throwGrenadeAction.action.WasPressedThisFrame())
-        {   
-           GameObject explosiveGrenade = Instantiate(
-                grenade,
-                holderGrenade.position,
-                holderGrenade.rotation
-            );
-            Rigidbody rb=explosiveGrenade.GetComponent<Rigidbody>();
+        if (throwGrenadeAction == null || !throwGrenadeAction.action.WasPressedThisFrame()) return;
 
-            rb.linearVelocity=holderGrenade.transform.forward*throwGrenadeForce;
+        if (GameSession.Instance == null || grenadeData == null || grenade == null || holderGrenade == null)
+        {
+            Debug.LogWarning("Faltan referencias para lanzar la granada.");
+            return;
+        }
+
+        Inventory inventory = GameSession.Instance.Inventory;
+        if (inventory == null || !inventory.TryConsume(grenadeData, 1)) return;
+
+        GameObject explosiveGrenade = Instantiate(
+            grenade,
+            holderGrenade.position,
+            holderGrenade.rotation
+        );
+
+        if (explosiveGrenade.TryGetComponent(out Rigidbody rb))
+        {   
+            rb.linearVelocity = movement.Velocity + (holderGrenade.forward * throwGrenadeForce);
         }
     }
 
