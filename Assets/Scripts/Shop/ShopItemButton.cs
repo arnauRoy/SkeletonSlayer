@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine.UI;
 public class ShopItemButton : MonoBehaviour
 {
     [SerializeField] private PurchasePoint purchasePoint;
+    [SerializeField] private Image itemImage;
     [SerializeField] private Button buyButton;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI priceText;
@@ -21,6 +21,10 @@ public class ShopItemButton : MonoBehaviour
         errorBuyText.enabled=false;
         nameText.text = purchasePoint.Offer.displayName;
         priceText.text = purchasePoint.Offer.cost + " $";
+
+        //Comprobamos si tiene item y si tiene icono para añadirselo a la imagen
+        Sprite spriteImage = purchasePoint?.Offer?.item?.icon;
+        if(itemImage!=null &&spriteImage!=null)itemImage.sprite=spriteImage;
 
         buyButton.onClick.AddListener(OnBuyClicked);
         RefreshState();
@@ -37,25 +41,35 @@ public class ShopItemButton : MonoBehaviour
         {
             RefreshState();
         }
-        else
+        else if(purchasePoint.purchasedFailedByFounds)
         {
             onBuyFailed();
+        }
+        else
+        {
+            onMaxAmount();
         }
     }
 
     private void onBuyFailed()
     {
         if(errorBuyText==null)return;
-        StartCoroutine(SetFailedText());
+        StartCoroutine(SetFailedText("insuficient founds"));
         
     }
 
-    private IEnumerator SetFailedText()
+    private void onMaxAmount()
+    {
+        if(errorBuyText==null)return;
+        StartCoroutine(SetFailedText("Max amoun reached"));
+    }
+
+    private IEnumerator SetFailedText(string text)
     {
         buyButton.interactable=false;
         errorBuyText.enabled=true;
 
-        errorBuyText.text="insuficient founds";
+        errorBuyText.text=text;
         errorBuyText.color=Color.red;
 
         yield return new WaitForSeconds(durationFailedPurchasedText);

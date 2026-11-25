@@ -6,6 +6,8 @@ public class GameSession : MonoBehaviour
     public static GameSession Instance { get; private set; }
     public Wallet Wallet { get; private set; } = new Wallet();
 
+    public Inventory Inventory{ get; private set; }=new Inventory();
+
     //Al arrancar el juego este se crea automaticamente
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]//BeforeSceneLoad garantiza que se cree antes de cualquier onEnable
     private static void Create()

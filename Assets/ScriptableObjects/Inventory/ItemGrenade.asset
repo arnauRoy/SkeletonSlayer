@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d34457988d79f4ab84f4e1cf26ea03a, type: 3}
+  m_Name: ItemGrenade
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  id: 1
+  displayName: Grenade
+  icon: {fileID: -1799391105044668885, guid: 08817c5cc33c35e1d9865a10e74e13e1, type: 3}
+  maxStack: 9
+  prefab: {fileID: 966233753764215072, guid: 7cf82651d9b7e6c7a93f983f21fa80cc, type: 3}
